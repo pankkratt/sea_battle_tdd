@@ -1,3 +1,5 @@
+package model;
+
 public class Field {
 
     public static final int WIDTH = 10;

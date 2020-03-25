@@ -1,5 +1,6 @@
-public class Cell {
+package model;
 
+public class Cell {
     private int column;
     private int row;
     private Sign sign;
@@ -17,7 +18,6 @@ public class Cell {
     public Sign getSign() {
         return sign;
     }
-
 
     public enum Sign {DECK, EMPTY}
 }

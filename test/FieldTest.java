@@ -1,3 +1,5 @@
+import model.Cell;
+import model.Field;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,7 +14,7 @@ public class FieldTest {
     }
 
     @Test
-    public void testInitFieldCellIsEmpty() {
+    public void testInitFieldWithEmptyCells() {
         assertEquals(Cell.Sign.EMPTY, field.readInCell(2, 4));
     }
 
