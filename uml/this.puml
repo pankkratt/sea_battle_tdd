@@ -1,0 +1,103 @@
+@startuml
+
+title Sea Battle
+
+package game {
++class Game {
+    -Player firstPlayer
+    -Player secondPlayer
+    -Field firstPlayerField
+    -Field firstPlayerEnemyField
+    -Field secondPlayerField
+    -Field secondPlayerEnemyField
+    -ShowBehavior showBehavior
+
+    +play()
+    +show()
+}
+
+~interface ShowBehavior {
+    ~show()
+}
+
++class ShowInTerminalStrategy implements ShowBehavior {
+    ~show()
+}
+
++class ShowInGuiStrategy implements ShowBehavior {
+    ~show()
+}
+
+Game *-- ShowBehavior
+note "play() {\n\t\
+Point firstPlayerShoot = firstPlayer.shoot();\n\t\
+Field.Answer secondPlayerAnswer = secondPlayerField.update(firstPlayerShoot);\n\t\
+firstPlayerEnemyField.update(firstPlayerShoot, secondPlayerAnswer);\n\
+}" as N1
+}
+
+package player {
++abstract class Player {
+    #ArrangeShipsBehavior arrangeShipsBehavior
+    #ShootBehavior shootBehavior
+
+    +arrangeShips()
+    +shoot()
+}
+
+~interface ArrangeShipsBehavior {
+    ~arrangeShips()
+}
+
+~interface ShootBehavior {
+    ~shoot()
+}
+
+Player *-- ArrangeShipsBehavior
+Player *-- ShootBehavior
+}
+
+package field {
+
++class Field {
+
+    +{static}final int WIDTH = 10
+    +{static}final int HEIGHT = 10
+    -Cell[][] cells
+    ~enum Answer
+
+    +Field()
+    +Cell.Sign readFromCell(Point point)
+    +void writeInCell(Point point, Cell.Sign sign)
+    +Answer update(Point point)
+    +void update(Point point, Answer answer)
+    -void init()
+    -boolean isSunk()
+    -void markNeighboringCells(Point point, Cell.Sign sign)
+}
+
++class Point {
+    -int column
+    -int row
+
+    +Point(int column, int row)
+    +int getColumn()
+    +int getRow()
+}
+
+~class Cell {
+    -Sign sign
+    ~enum Sign
+
+    ~Cell()
+    ~void setSign(Sign sign)
+    ~Sign getSign()
+}
+
+Field o--"100" Cell
+}
+
+Game o---"2" Player
+Player o--"2" Field
+
+@enduml
