@@ -1,5 +1,8 @@
 package field;
 
+import field.Cell;
+import field.Field;
+import field.Point;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

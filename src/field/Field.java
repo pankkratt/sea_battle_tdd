@@ -1,13 +1,10 @@
 package field;
 
-import java.io.Reader;
-
 public class Field {
-
     public static final int WIDTH = 10;
     public static final int HEIGHT = 10;
     private Cell[][] cells;
-    enum Answer {
+    public enum Answer {
         GET,
         MISS,
         REPEAT,
@@ -83,7 +80,7 @@ public class Field {
         }
     }
 
-    private boolean isSunk() {
+    public boolean isSunk() {
         return false;
     }
 

@@ -1,23 +1,23 @@
 package field;
 
-class Cell {
+public class Cell {
     private Sign sign;
-    enum Sign {
+    public enum Sign {
         DECK,
         DESTROYED,
         EMPTY,
         MARKED,
     }
 
-    Cell() {
+    public Cell() {
         sign = Sign.EMPTY;
     }
 
-    void setSign(Sign sign) {
+    public void setSign(Sign sign) {
         this.sign = sign;
     }
 
-    Sign getSign() {
+    public Sign getSign() {
         return sign;
     }
 }

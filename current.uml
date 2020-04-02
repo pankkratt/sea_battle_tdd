@@ -1,0 +1,103 @@
+@startuml
+package game {
++class Game {
+    -Player firstPlayer
+    -Player secondPlayer
+    -Field firstPlayerField
+    -Field firstPlayerEnemyField
+    -Field secondPlayerField
+    -Field secondPlayerEnemyField
+    -ShowBehavior showBehavior
+
+    +Game() 
+    +void init() 
+    +void play() 
+    +void show() 
+    +void setShowBehavior(ShowBehavior showBehavior) 
+}
+~interface ShowBehavior {
+    ~void show(Field field, Field enemyField)
+}
++class ShowInConsoleStrategy implements ShowBehavior {
+    ~StringBuilder display = new StringBuilder()
+    +void show(Field field, Field enemyField) 
+    -void getRow(int row, Field field) 
+    -char getValueOfSign(Cell.Sign sign) 
+}
+~class ShowInGuiStrategy implements ShowBehavior {
+    +void show(Field field, Field enemyField) 
+}
+}
+package field {
++class Cell {
+    -Sign sign
+    +enum Sign 
+
+    +Cell() 
+    +void setSign(Sign sign) 
+    +Sign getSign() 
+}
++class Field {
+    +{static}final int WIDTH = 10
+    +{static}final int HEIGHT = 10
+    -Cell[][] cells
+    +enum Answer 
+
+    +Field() 
+    +Cell.Sign readFromCell(Point point) 
+    +void writeInCell(Point point, Cell.Sign sign) 
+    +Answer update(Point point) 
+    +void update(Point point, Answer answer) 
+    -void init() 
+    +boolean isSunk() 
+    -void markNeighboringCells(Point point, Cell.Sign sign) 
+}
++class Point {
+    -int column
+    -int row
+
+    +Point(int column, int row) 
+    +int getColumn() 
+    +int getRow() 
+}
+}
+package player {
+~interface ArrangeShipsBehavior {
+    ~void arrangeShips(Field field)
+}
++class Computer extends Player {
+    +Computer(Field field, Field enemyField) 
+}
++class Human extends Player {
+
+    +Human(Field field, Field enemyField) 
+}
++abstract class Player {
+    #Field field
+    #Field enemyField
+    #ArrangeShipsBehavior arrangeShipsBehavior
+    #ShootBehavior shootBehavior
+
+    +Player(Field field, Field enemyField) 
+    +void arrangeShips() 
+    ~Point shoot() 
+    +void setArrangeShipsBehavior(ArrangeShipsBehavior arrangeShipsBehavior) 
+    +void setShootBehavior(ShootBehavior shootBehavior) 
+}
++class RandomArrangeShipsStrategy implements ArrangeShipsBehavior {
+
+    +void arrangeShips(Field field) 
+}
+~interface ShootBehavior {
+    ~Point shoot()
+}
+}
+Game o-- Player
+Game o-- Field
+Game o-- ShowBehavior
+Field o-- Cell
+Player o-- Human
+Player o-- ArrangeShipsBehavior
+Player o-- ShootBehavior
+Player o-- Field
+@enduml
