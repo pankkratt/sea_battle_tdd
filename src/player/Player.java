@@ -18,9 +18,8 @@ public abstract class Player {
         arrangeShipsBehavior.arrangeShips(field);
     }
 
-    Point shoot() {
-        shootBehavior.shoot();
-        return null;
+    public Point shoot() {
+        return shootBehavior.shoot();
     }
 
     public void setArrangeShipsBehavior(ArrangeShipsBehavior arrangeShipsBehavior) {

@@ -1,15 +1,15 @@
 package field;
 
+import java.util.Random;
+
 public class Point {
     private int column;
     private int row;
 
-    @Override
-    public String toString() {
-        return "Point{" +
-                "column=" + column +
-                ", row=" + row +
-                '}';
+    public Point() {
+        Random random = new Random();
+        column = random.nextInt(Field.WIDTH);
+        row = random.nextInt(Field.HEIGHT);
     }
 
     public Point(int column, int row) {
@@ -23,5 +23,13 @@ public class Point {
 
     public int getRow() {
         return row;
+    }
+
+    @Override
+    public String toString() {
+        return "Point{" +
+                "column=" + column +
+                ", row=" + row +
+                '}';
     }
 }

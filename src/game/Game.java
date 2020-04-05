@@ -1,10 +1,10 @@
 package game;
 
 import field.Field;
-import player.Computer;
-import player.Human;
-import player.Player;
-import player.RandomArrangeShipsStrategy;
+import field.Point;
+import player.*;
+
+import java.util.Scanner;
 
 public class Game {
     public static final int MAX_NUM_DECKS = 4;
@@ -27,14 +27,39 @@ public class Game {
 
     public void init() {
         firstPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
+        secondPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
+        firstPlayer.setShootBehavior(new RandomShootStrategy());
+        secondPlayer.setShootBehavior(new RandomShootStrategy());
         firstPlayer.arrangeShips();
+        secondPlayer.arrangeShips();
     }
 
     public void play() {
-        show();
+        Point shoot;
+        Field.Answer answer;
+        Player currentPlayer = firstPlayer;
+        Field currentShelledField = secondPlayerField;
+        Field currentPlayerEnemyField = firstPlayerEnemyField;
+
+        while (true) {
+            shoot = currentPlayer.shoot();
+            answer = currentShelledField.update(shoot);
+            currentPlayerEnemyField.update(shoot, answer);
+            show();
+            if (answer == Field.Answer.MISS) {
+                currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
+                currentShelledField = currentShelledField == secondPlayerField ? firstPlayerField : secondPlayerField;
+                currentPlayerEnemyField = currentPlayerEnemyField == firstPlayerEnemyField
+                        ? secondPlayerEnemyField : firstPlayerEnemyField;
+            }
+
+            Scanner sc = new Scanner(System.in);
+            sc.nextLine();
+        }
+
     }
 
-    public void show() {
+    private void show() {
         viewable.show(firstPlayerField, firstPlayerEnemyField);
     }
 

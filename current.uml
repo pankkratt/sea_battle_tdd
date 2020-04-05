@@ -87,7 +87,6 @@ package player {
     +Computer(Field field, Field enemyField) 
 }
 +class Human extends Player {
-
     +Human(Field field, Field enemyField) 
 }
 +abstract class Player {
@@ -110,13 +109,12 @@ package player {
     ~Point shoot()
 }
 }
-Game o-- Player
-Game o-- Field
-Game o-- Viewable
-Field o-- Cell
-Player o-- Human
-Player o-- ArrangeShipsBehavior
-Player o-- ShootBehavior
-Player o-- Field
-Player o-- Ship
+Game o--- Player
+Game o--- Field
+Game o--- Viewable
+Field o--- Cell
+Player o--- ArrangeShipsBehavior
+Player o--- ShootBehavior
+Player o--- Field
+Player o--- Ship
 @enduml
