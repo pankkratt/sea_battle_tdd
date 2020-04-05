@@ -7,13 +7,14 @@ import player.Player;
 import player.RandomArrangeShipsStrategy;
 
 public class Game {
+    public static final int MAX_NUM_DECKS = 4;
     private Player firstPlayer;
     private Player secondPlayer;
     private Field firstPlayerField;
     private Field firstPlayerEnemyField;
     private Field secondPlayerField;
     private Field secondPlayerEnemyField;
-    private ShowBehavior showBehavior;
+    private Viewable viewable;
 
     public Game() {
         firstPlayerField = new Field();
@@ -34,10 +35,10 @@ public class Game {
     }
 
     public void show() {
-        showBehavior.show(firstPlayerField, firstPlayerEnemyField);
+        viewable.show(firstPlayerField, firstPlayerEnemyField);
     }
 
-    public void setShowBehavior(ShowBehavior showBehavior) {
-        this.showBehavior = showBehavior;
+    public void setViewable(Viewable viewable) {
+        this.viewable = viewable;
     }
 }

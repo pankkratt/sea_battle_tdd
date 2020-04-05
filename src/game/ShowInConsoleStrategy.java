@@ -4,7 +4,7 @@ import field.Cell;
 import field.Field;
 import field.Point;
 
-public class ShowInConsoleStrategy implements ShowBehavior {
+public class ShowInConsoleStrategy implements Viewable {
     StringBuilder display = new StringBuilder();
 
     @Override
@@ -38,14 +38,15 @@ public class ShowInConsoleStrategy implements ShowBehavior {
     }
 
     private char getValueOfSign(Cell.Sign sign) {
-        //
+        //　
         switch (sign) {
             case DESTROYED:
                 return '\uE73D';
-            case EMPTY:
-                return '\uE739';
             case MARKED:
                 return '\uE73A';
+            case EMPTY:
+            case UNAVAILABLE:
+                return '\uE739';
             case DECK:
                 return '\uE73B';
         }

@@ -1,31 +1,32 @@
 @startuml
 package game {
 +class Game {
+    +{static}final int MAX_NUM_DECKS = 4
     -Player firstPlayer
     -Player secondPlayer
     -Field firstPlayerField
     -Field firstPlayerEnemyField
     -Field secondPlayerField
     -Field secondPlayerEnemyField
-    -ShowBehavior showBehavior
+    -Viewable viewable
 
     +Game() 
     +void init() 
     +void play() 
     +void show() 
-    +void setShowBehavior(ShowBehavior showBehavior) 
+    +void setViewable(Viewable viewable) 
 }
-~interface ShowBehavior {
-    ~void show(Field field, Field enemyField)
-}
-+class ShowInConsoleStrategy implements ShowBehavior {
++class ShowInConsoleStrategy implements Viewable {
     ~StringBuilder display = new StringBuilder()
     +void show(Field field, Field enemyField) 
     -void getRow(int row, Field field) 
     -char getValueOfSign(Cell.Sign sign) 
 }
-~class ShowInGuiStrategy implements ShowBehavior {
+~class ShowInGuiStrategy implements Viewable {
     +void show(Field field, Field enemyField) 
+}
+~interface Viewable {
+    ~void show(Field field, Field enemyField)
 }
 }
 package field {
@@ -44,21 +45,38 @@ package field {
     +enum Answer 
 
     +Field() 
+    +boolean addShip(Ship ship) 
+    -boolean isEnoughPlace(List<Point> points) 
+    -void markUnavailableCells(List<Point> points) 
     +Cell.Sign readFromCell(Point point) 
-    +void writeInCell(Point point, Cell.Sign sign) 
+    +boolean writeInCell(Point point, Cell.Sign sign) 
     +Answer update(Point point) 
     +void update(Point point, Answer answer) 
     -void init() 
     +boolean isSunk() 
-    -void markNeighboringCells(Point point, Cell.Sign sign) 
+    +void markNeighboringCells(Point point, Cell.Sign sign) 
 }
 +class Point {
     -int column
     -int row
 
+    +String toString() 
     +Point(int column, int row) 
     +int getColumn() 
     +int getRow() 
+}
++class Ship {
+    ~Random random = new Random()
+    -Point from
+    -Orientation orientation
+    -int length
+    -List<Point> points
+    +enum Orientation 
+    +Ship(int length) 
+    -void init() 
+    -void setOrientation() 
+    -void setFrom() 
+    +List<Point> getPoints() 
 }
 }
 package player {
@@ -94,10 +112,11 @@ package player {
 }
 Game o-- Player
 Game o-- Field
-Game o-- ShowBehavior
+Game o-- Viewable
 Field o-- Cell
 Player o-- Human
 Player o-- ArrangeShipsBehavior
 Player o-- ShootBehavior
 Player o-- Field
+Player o-- Ship
 @enduml

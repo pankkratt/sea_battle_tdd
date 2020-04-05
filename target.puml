@@ -10,7 +10,7 @@ package game {
     -Field firstPlayerEnemyField
     -Field secondPlayerField
     -Field secondPlayerEnemyField
-    -ShowBehavior showBehavior
+    -ShowBehavior viewable
 
     +play()
     +show()

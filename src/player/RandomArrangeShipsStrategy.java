@@ -1,16 +1,23 @@
 package player;
 
-import field.Cell;
 import field.Field;
 import field.Point;
+import field.Ship;
+import game.Game;
 
 public class RandomArrangeShipsStrategy implements ArrangeShipsBehavior {
 
     @Override
     public void arrangeShips(Field field) {
-        field.writeInCell(new Point(3,2), Cell.Sign.DECK);
-        field.writeInCell(new Point(3,3), Cell.Sign.DECK);
-        field.writeInCell(new Point(3,4), Cell.Sign.DECK);
-        field.writeInCell(new Point(3,5), Cell.Sign.DECK);
+        int numDecks = Game.MAX_NUM_DECKS;
+        Ship ship;
+        for (int i = numDecks; i > 0; i--) {
+            for (int j = numDecks + 1 - i; j > 0; j--) {
+                do {
+                    ship = new Ship(i);
+                } while (!field.addShip(ship));
+            }
+        }
     }
+
 }

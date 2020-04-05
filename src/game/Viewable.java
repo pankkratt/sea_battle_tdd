@@ -2,6 +2,6 @@ package game;
 
 import field.Field;
 
-interface ShowBehavior {
+interface Viewable {
     void show(Field field, Field enemyField);
 }

@@ -7,6 +7,7 @@ public class Cell {
         DESTROYED,
         EMPTY,
         MARKED,
+        UNAVAILABLE,
     }
 
     public Cell() {
