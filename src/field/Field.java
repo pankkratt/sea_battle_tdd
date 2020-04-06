@@ -26,6 +26,18 @@ public class Field {
         }
     }
 
+    public int countNumberOfDecks() {
+        int count = 0;
+        for (int row = 0; row < HEIGHT; row++) {
+            for (int column = 0; column < WIDTH; column++) {
+                if (readFromCell(new Point(column, row)) == Cell.Sign.DECK) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     public boolean addShip(Ship ship) {
         List<Point> points = ship.getPoints();
         if (isEnoughPlace(points)) {

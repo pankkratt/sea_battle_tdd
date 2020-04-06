@@ -8,12 +8,16 @@ package game {
     -Field firstPlayerEnemyField
     -Field secondPlayerField
     -Field secondPlayerEnemyField
+    -Status status
     -Viewable viewable
+    -int numberOfDecks
+    -enum Status 
 
     +Game() 
     +void init() 
     +void play() 
-    +void show() 
+    -void changeGameStatus() 
+    -void show() 
     +void setViewable(Viewable viewable) 
 }
 +class ShowInConsoleStrategy implements Viewable {
@@ -45,25 +49,29 @@ package field {
     +enum Answer 
 
     +Field() 
+    -void init() 
+    +int countNumberOfDecks() 
     +boolean addShip(Ship ship) 
-    -boolean isEnoughPlace(List<Point> points) 
-    -void markUnavailableCells(List<Point> points) 
     +Cell.Sign readFromCell(Point point) 
-    +boolean writeInCell(Point point, Cell.Sign sign) 
+    +void writeInCell(Point point, Cell.Sign sign) 
     +Answer update(Point point) 
     +void update(Point point, Answer answer) 
-    -void init() 
     +boolean isSunk() 
     +void markNeighboringCells(Point point, Cell.Sign sign) 
+    -boolean isEnoughPlace(List<Point> points) 
+    -void markUnavailableCells(List<Point> points) 
 }
 +class Point {
     -int column
     -int row
 
-    +String toString() 
+    +Point() 
     +Point(int column, int row) 
     +int getColumn() 
     +int getRow() 
+    +String toString() 
+    +boolean equals(Object o) 
+    +int hashCode() 
 }
 +class Ship {
     ~Random random = new Random()
@@ -73,10 +81,10 @@ package field {
     -List<Point> points
     +enum Orientation 
     +Ship(int length) 
+    +List<Point> getPoints() 
     -void init() 
     -void setOrientation() 
     -void setFrom() 
-    +List<Point> getPoints() 
 }
 }
 package player {
@@ -89,32 +97,49 @@ package player {
 +class Human extends Player {
     +Human(Field field, Field enemyField) 
 }
++class ImprovedRandomShootStrategy implements ShootBehavior {
+    -Set<Point> ignoredPoints
+    -Player player
+
+    +ImprovedRandomShootStrategy(Player player) 
+    +Point shoot() 
+}
 +abstract class Player {
     #Field field
     #Field enemyField
     #ArrangeShipsBehavior arrangeShipsBehavior
     #ShootBehavior shootBehavior
+    #int hitCount
+    #Point lastHit
 
     +Player(Field field, Field enemyField) 
     +void arrangeShips() 
-    ~Point shoot() 
+    +Point shoot() 
     +void setArrangeShipsBehavior(ArrangeShipsBehavior arrangeShipsBehavior) 
     +void setShootBehavior(ShootBehavior shootBehavior) 
+    +int getHitCount() 
+    +void addHitCount() 
+    +Point getLastHit() 
+    +void setLastHit(Point lastHit) 
 }
 +class RandomArrangeShipsStrategy implements ArrangeShipsBehavior {
 
     +void arrangeShips(Field field) 
 }
++class RandomShootStrategy implements ShootBehavior {
+    +Point shoot() 
+}
 ~interface ShootBehavior {
     ~Point shoot()
 }
 }
-Game o--- Player
-Game o--- Field
-Game o--- Viewable
-Field o--- Cell
-Player o--- ArrangeShipsBehavior
-Player o--- ShootBehavior
-Player o--- Field
-Player o--- Ship
+Game o-- Player
+Game o-- Field
+Game o-- Viewable
+ImprovedRandomShootStrategy o-- Player
+ImprovedRandomShootStrategy o-- Point
+Player o-- ArrangeShipsBehavior
+Player o-- ShootBehavior
+Player o-- Point
+Player o-- Field
 @enduml

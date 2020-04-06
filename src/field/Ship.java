@@ -23,6 +23,12 @@ public class Ship {
         init();
     }
 
+    public List<Point> getPoints() {
+        List<Point> clonedPoints = new ArrayList<>();
+        clonedPoints.addAll(points);
+        return clonedPoints;
+    }
+
     private void init() {
         int fromColumn = from.getColumn();
         int fromRow = from.getRow();
@@ -51,11 +57,5 @@ public class Ship {
         int column = random.nextInt(width);
         int row = random.nextInt(height);
         from = new Point(column, row);
-    }
-
-    public List<Point> getPoints() {
-        List<Point> clonedPoints = new ArrayList<>();
-        clonedPoints.addAll(points);
-        return clonedPoints;
     }
 }

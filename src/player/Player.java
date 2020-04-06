@@ -8,6 +8,8 @@ public abstract class Player {
     protected Field enemyField;
     protected ArrangeShipsBehavior arrangeShipsBehavior;
     protected ShootBehavior shootBehavior;
+    protected int hitCount;
+    protected Point lastHit;
 
     public Player(Field field, Field enemyField) {
         this.field = field;
@@ -30,6 +32,20 @@ public abstract class Player {
         this.shootBehavior = shootBehavior;
     }
 
+    public int getHitCount() {
+        return hitCount;
+    }
 
+    public void addHitCount() {
+        hitCount++;
+    }
+
+    public Point getLastHit() {
+        return lastHit;
+    }
+
+    public void setLastHit(Point lastHit) {
+        this.lastHit = lastHit;
+    }
 }
 
