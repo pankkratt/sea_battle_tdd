@@ -3,7 +3,7 @@ package player;
 import field.Field;
 import field.Point;
 
-public abstract class Player {
+public class Player {
     protected Field field;
     protected Field enemyField;
     protected ArrangeShipsBehavior arrangeShipsBehavior;

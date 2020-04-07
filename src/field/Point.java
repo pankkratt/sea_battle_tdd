@@ -2,6 +2,7 @@ package field;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Point {
     private int column;
@@ -16,6 +17,14 @@ public class Point {
     public Point(int column, int row) {
         this.column = column;
         this.row = row;
+    }
+
+    public Point(String s) {
+        column = s.charAt(0) - 'a';
+        row = s.charAt(1) - '0' - 1;
+        if (s.length() > 2) {
+            row = row * 10 + s.charAt(2) - '0' + 9;
+        }
     }
 
     public int getColumn() {

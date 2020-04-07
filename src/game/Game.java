@@ -34,11 +34,12 @@ public class Game {
     public void init() {
         firstPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
         secondPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
-        firstPlayer.setShootBehavior(new ImprovedRandomShootStrategy(firstPlayer));
-        secondPlayer.setShootBehavior(new RandomShootStrategy());
+        firstPlayer.setShootBehavior(new InputFromUserStrategy());
+        secondPlayer.setShootBehavior(new ImprovedRandomShootStrategy(firstPlayer));
         firstPlayer.arrangeShips();
         secondPlayer.arrangeShips();
         numberOfDecks = firstPlayerField.countNumberOfDecks();
+        show();
     }
 
     public void play() {
@@ -53,6 +54,7 @@ public class Game {
             answer = currentShelledField.update(shoot);
             currentPlayerEnemyField.update(shoot, answer);
             show();
+            System.out.println(answer);
             if (answer == Field.Answer.GET || answer == Field.Answer.SUNK) {
                 currentPlayer.addHitCount();
                 currentPlayer.setLastHit(shoot);

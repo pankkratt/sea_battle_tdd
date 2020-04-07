@@ -85,10 +85,9 @@ public class Field {
                 answer = Answer.REPEAT;
                 break;
             case DECK:
-                if (isSunk()) {
+                if (isSunk(point)) {
                     answer = Answer.SUNK;
                 } else {
-                    // TODO: 3/30/2020
                     answer = Answer.GET;
                 }
                 writeInCell(point, Cell.Sign.DESTROYED);
@@ -115,10 +114,6 @@ public class Field {
                 break;
         }
         // TODO: 3/29/2020
-    }
-
-    public boolean isSunk() {
-        return false;
     }
 
     public void markNeighboringCells(Point point, Cell.Sign sign) {
@@ -148,5 +143,28 @@ public class Field {
                 }
             }
         }
+    }
+
+    private boolean isSunk(Point point) {
+        int column = point.getColumn();
+        int row = point.getRow();
+        Point neighboringCell;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 ^ j == 0) {
+                    neighboringCell = new Point(column + i, row + j);
+                    if (readFromCell(neighboringCell) == Cell.Sign.DECK) {
+                        return false;
+                    }
+                    if (readFromCell(neighboringCell) == Cell.Sign.DESTROYED) {
+                        writeInCell(point, Cell.Sign.MARKED);
+                        boolean isSunk = isSunk(neighboringCell);
+                        writeInCell(point, Cell.Sign.DESTROYED);
+                        if (!isSunk) return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
