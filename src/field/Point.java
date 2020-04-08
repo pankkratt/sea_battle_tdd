@@ -1,5 +1,7 @@
 package field;
 
+import game.Configuration;
+
 import java.util.Objects;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -10,8 +12,8 @@ public class Point {
 
     public Point() {
         Random random = new Random();
-        column = random.nextInt(Field.WIDTH);
-        row = random.nextInt(Field.HEIGHT);
+        column = random.nextInt(Configuration.getFieldWidth());
+        row = random.nextInt(Configuration.getFieldHeight());
     }
 
     public Point(int column, int row) {

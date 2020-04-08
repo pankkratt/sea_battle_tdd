@@ -1,14 +1,12 @@
 package game;
 
-import field.Cell;
-import field.Field;
-import field.Point;
+import field.*;
 
 public class ShowInConsoleStrategy implements Viewable {
     StringBuilder display = new StringBuilder();
 
     @Override
-    public void show(Field field, Field enemyField) {
+    public void show(AbstractField field, AbstractField enemyField) {
 //        String letters = "А　Б　В　Г　Д　Е　Ж　З　И　К";
         String letters = "A　B　C　D　E　F　G　H　I　J";
 
@@ -17,8 +15,8 @@ public class ShowInConsoleStrategy implements Viewable {
         display.append("　　　");
         display.append(letters);
         display.append("\n");
-        for (int row = 0; row < Field.HEIGHT; row++) {
-            for (Field f : new Field[]{field, enemyField}) {
+        for (int row = 0; row < Configuration.getFieldHeight(); row++) {
+            for (AbstractField f : new AbstractField[]{field, enemyField}) {
                 display.append((char) ('\uF146' + row));
                 display.append(" ");
                 getRow(row, f);
@@ -29,8 +27,8 @@ public class ShowInConsoleStrategy implements Viewable {
         System.out.println(display);
     }
 
-    private void getRow(int row, Field field) {
-        for (int column = 0; column < Field.WIDTH; column++) {
+    private void getRow(int row, AbstractField field) {
+        for (int column = 0; column < Configuration.getFieldWidth(); column++) {
             Cell.Sign sign = field.readFromCell(new Point(column, row));
             display.append(getValueOfSign(sign));
             display.append(" ");
@@ -45,7 +43,6 @@ public class ShowInConsoleStrategy implements Viewable {
             case MARKED:
                 return '\uE73A';
             case EMPTY:
-            case UNAVAILABLE:
                 return '\uE739';
             case DECK:
                 return '\uE73B';

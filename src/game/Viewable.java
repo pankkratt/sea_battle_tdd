@@ -1,7 +1,7 @@
 package game;
 
-import field.Field;
+import field.AbstractField;
 
 interface Viewable {
-    void show(Field field, Field enemyField);
+    void show(AbstractField field, AbstractField enemyField);
 }

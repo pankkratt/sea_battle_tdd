@@ -1,6 +1,7 @@
 package player;
 
-import field.Field;
+import field.EnemiesField;
+import field.PlayersField;
 import field.Point;
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +19,7 @@ public class ShootStrategyTest {
 
     @Before
     public void setUp() throws Exception {
-        player = new Player(new Field(), new Field());
+        player = new Player(new PlayersField(), new EnemiesField());
     }
 
     @After

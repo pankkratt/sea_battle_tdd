@@ -1,6 +1,8 @@
 package game;
 
-import field.Field;
+import field.AbstractField;
+import field.EnemiesField;
+import field.PlayersField;
 import field.Point;
 import player.*;
 
@@ -8,10 +10,10 @@ public class Game {
     public static final int MAX_NUM_DECKS = 4;
     private Player firstPlayer;
     private Player secondPlayer;
-    private Field firstPlayerField;
-    private Field firstPlayerEnemyField;
-    private Field secondPlayerField;
-    private Field secondPlayerEnemyField;
+    private PlayersField firstPlayerField;
+    private EnemiesField firstPlayerEnemyField;
+    private PlayersField secondPlayerField;
+    private EnemiesField secondPlayerEnemyField;
     private Status status;
     private Viewable viewable;
     private int numberOfDecks;
@@ -22,12 +24,12 @@ public class Game {
     }
 
     public Game() {
-        firstPlayerField = new Field();
-        firstPlayerEnemyField = new Field();
-        secondPlayerField = new Field();
-        secondPlayerEnemyField = new Field();
-        firstPlayer = new Human(firstPlayerField, firstPlayerEnemyField);
-        secondPlayer = new Computer(secondPlayerField, secondPlayerEnemyField);
+        firstPlayerField = new PlayersField();
+        firstPlayerEnemyField = new EnemiesField();
+        secondPlayerField = new PlayersField();
+        secondPlayerEnemyField = new EnemiesField();
+        firstPlayer = new Player(firstPlayerField, firstPlayerEnemyField);
+        secondPlayer = new Player(secondPlayerField, secondPlayerEnemyField);
         status = Status.PLAY;
     }
 
@@ -44,10 +46,10 @@ public class Game {
 
     public void play() {
         Point shoot;
-        Field.Answer answer;
+        AbstractField.Answer answer;
         Player currentPlayer = firstPlayer;
-        Field currentShelledField = secondPlayerField;
-        Field currentPlayerEnemyField = firstPlayerEnemyField;
+        PlayersField currentShelledField = secondPlayerField;
+        EnemiesField currentPlayerEnemyField = firstPlayerEnemyField;
 
         while (status == Status.PLAY) {
             shoot = currentPlayer.shoot();
@@ -55,12 +57,12 @@ public class Game {
             currentPlayerEnemyField.update(shoot, answer);
             show();
             System.out.println(answer);
-            if (answer == Field.Answer.GET || answer == Field.Answer.SUNK) {
+            if (answer == PlayersField.Answer.GET || answer == PlayersField.Answer.SUNK) {
                 currentPlayer.addHitCount();
                 currentPlayer.setLastHit(shoot);
                 changeGameStatus();
             }
-            if (answer == Field.Answer.MISS) {
+            if (answer == PlayersField.Answer.MISS) {
                 currentPlayer.setLastHit(null);
                 currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
                 currentShelledField = currentShelledField == secondPlayerField ? firstPlayerField : secondPlayerField;

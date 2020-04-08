@@ -1,35 +1,21 @@
 package field;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-public class Field {
-    public static final int WIDTH = 10;
-    public static final int HEIGHT = 10;
-    private Cell[][] cells;
-    public enum Answer {
-        GET,
-        MISS,
-        REPEAT,
-        SUNK,
-    }
+public class PlayersField extends AbstractField {
+    private Set<Point> unavailableCells;
 
-    public Field() {
-        cells = new Cell[WIDTH][HEIGHT];
-        init();
-    }
-
-    private void init() {
-        for (int row = 0; row < HEIGHT; row++) {
-            for (int column = 0; column < WIDTH; column++) {
-                cells[column][row] = new Cell();
-            }
-        }
+    public PlayersField() {
+        super();
+        unavailableCells = new HashSet<>();
     }
 
     public int countNumberOfDecks() {
         int count = 0;
-        for (int row = 0; row < HEIGHT; row++) {
-            for (int column = 0; column < WIDTH; column++) {
+        for (int row = 0; row < fieldHeight; row++) {
+            for (int column = 0; column < fieldWidth; column++) {
                 if (readFromCell(new Point(column, row)) == Cell.Sign.DECK) {
                     count++;
                 }
@@ -40,34 +26,16 @@ public class Field {
 
     public boolean addShip(Ship ship) {
         List<Point> points = ship.getPoints();
-        if (isEnoughPlace(points)) {
-            for (Point point : points) {
-                writeInCell(point, Cell.Sign.DECK);
+        for (Point point : points) {
+            if (unavailableCells.contains(point)) {
+                return false;
             }
-            markUnavailableCells(points);
-            return true;
-        } else {
-            return false;
         }
-    }
-
-    public Cell.Sign readFromCell(Point point) {
-        int column = point.getColumn();
-        int row = point.getRow();
-        if (column >= 0 && column < WIDTH && row >= 0 && row < HEIGHT) {
-            Cell cell = cells[column][row];
-            return cell.getSign();
+        for (Point point : points) {
+            writeInCell(point, Cell.Sign.DECK);
         }
-        return Cell.Sign.UNAVAILABLE;
-    }
-
-    public void writeInCell(Point point, Cell.Sign sign) {
-        int column = point.getColumn();
-        int row = point.getRow();
-        if (column >= 0 && column < WIDTH && row >= 0 && row < HEIGHT) {
-            Cell cell = cells[column][row];
-            cell.setSign(sign);
-        }
+        addUnavailableCells(points);
+        return true;
     }
 
     public Answer update(Point point) {
@@ -76,7 +44,6 @@ public class Field {
 
         switch (sign) {
             case EMPTY:
-            case UNAVAILABLE:
                 answer = Answer.MISS;
                 writeInCell(point, Cell.Sign.MARKED);
                 break;
@@ -98,38 +65,7 @@ public class Field {
         return answer;
     }
 
-    public void update(Point point, Answer answer) {
-        switch (answer) {
-            case GET:
-                writeInCell(point, Cell.Sign.DESTROYED);
-                break;
-            case MISS:
-                writeInCell(point, Cell.Sign.MARKED);
-                break;
-            case REPEAT:
-                break;
-            case SUNK:
-                writeInCell(point, Cell.Sign.DESTROYED);
-                markNeighboringCells(point, Cell.Sign.MARKED);
-                break;
-        }
-        // TODO: 3/29/2020
-    }
-
-    public void markNeighboringCells(Point point, Cell.Sign sign) {
-        // TODO: 3/30/2020
-    }
-
-    private boolean isEnoughPlace(List<Point> points) {
-        for (Point point : points) {
-            if (readFromCell(point) != Cell.Sign.EMPTY) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private void markUnavailableCells(List<Point> points) {
+    private void addUnavailableCells(List<Point> points) {
         Point point;
         for (Point p : points) {
             for (int i = -1; i <= 1; i++) {
@@ -137,8 +73,8 @@ public class Field {
                     int column = p.getColumn() + i;
                     int row = p.getRow() + j;
                     point = new Point(column, row);
+                    unavailableCells.add(point);
                     if (readFromCell(point) == Cell.Sign.EMPTY) {
-                        writeInCell(point, Cell.Sign.UNAVAILABLE);
                     }
                 }
             }
@@ -167,4 +103,5 @@ public class Field {
         }
         return true;
     }
+
 }

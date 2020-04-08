@@ -1,5 +1,7 @@
 package field;
 
+import game.Configuration;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -52,8 +54,8 @@ public class Ship {
     }
 
     private void setFrom() {
-        int width = orientation == Orientation.HORIZONTAL ? Field.WIDTH : Field.WIDTH - length;
-        int height = orientation == Orientation.VERTICAL ? Field.HEIGHT : Field.HEIGHT - length;
+        int width = orientation == Orientation.HORIZONTAL ? Configuration.getFieldWidth() : Configuration.getFieldWidth() - length;
+        int height = orientation == Orientation.VERTICAL ? Configuration.getFieldHeight() : Configuration.getFieldHeight() - length;
         int column = random.nextInt(width);
         int row = random.nextInt(height);
         from = new Point(column, row);

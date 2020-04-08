@@ -1,17 +1,18 @@
 package player;
 
-import field.Field;
+import field.EnemiesField;
+import field.PlayersField;
 import field.Point;
 
 public class Player {
-    protected Field field;
-    protected Field enemyField;
+    protected PlayersField field;
+    protected EnemiesField enemyField;
     protected ArrangeShipsBehavior arrangeShipsBehavior;
     protected ShootBehavior shootBehavior;
     protected int hitCount;
     protected Point lastHit;
 
-    public Player(Field field, Field enemyField) {
+    public Player(PlayersField field, EnemiesField enemyField) {
         this.field = field;
         this.enemyField = enemyField;
     }

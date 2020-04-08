@@ -1,7 +1,7 @@
 package player;
 
-import field.Field;
+import field.PlayersField;
 
 interface ArrangeShipsBehavior {
-    void arrangeShips(Field field);
+    void arrangeShips(PlayersField field);
 }
