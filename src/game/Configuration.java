@@ -1,6 +1,6 @@
 package game;
 
-public class Configuration {
+public abstract class Configuration {
     private static int fieldWidth = 10;
     private static int fieldHeight = 10;
 

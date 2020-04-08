@@ -13,24 +13,53 @@ public class EnemiesField extends AbstractField {
 
     public void update(Point point, Answer answer) {
         switch (answer) {
+            case SUNK:
+                onSunk(point);
             case GET:
+                onGet(point);
                 writeInCell(point, Cell.Sign.DESTROYED);
                 break;
             case MISS:
+                ignoredCells.add(point);
                 writeInCell(point, Cell.Sign.MARKED);
                 break;
             case REPEAT:
                 break;
-            case SUNK:
-                writeInCell(point, Cell.Sign.DESTROYED);
-                markNeighboringCells(point, Cell.Sign.MARKED);
-                break;
         }
-        // TODO: 3/29/2020
     }
 
-    public void markNeighboringCells(Point point, Cell.Sign sign) {
-        // TODO: 3/30/2020
+    private void onSunk(Point point) {
+        int column = point.getColumn();
+        int row = point.getRow();
+        Point neighboringCell;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                neighboringCell = new Point(column + i, row + j);
+                if (!((i == 0) == (j == 0))) {
+                    ignoredCells.add(neighboringCell);
+                    if (readFromCell(neighboringCell) == Cell.Sign.DESTROYED) {
+                        writeInCell(point, Cell.Sign.EMPTY);
+                        onSunk(neighboringCell);
+                        writeInCell(point, Cell.Sign.DESTROYED);
+                    }
+                }
+            }
+        }
     }
 
+    private void onGet(Point point) {
+        int column = point.getColumn();
+        int row = point.getRow();
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if ((i == 0) == (j == 0)) {
+                    ignoredCells.add(new Point(column + i, row + j));
+                }
+            }
+        }
+    }
+
+    public Set<Point> getIgnoredCells() {
+        return new HashSet<>(ignoredCells);
+    }
 }

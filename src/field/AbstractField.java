@@ -6,11 +6,14 @@ public abstract class AbstractField {
     protected int fieldWidth;
     protected int fieldHeight;
     protected Cell[][] cells;
+
+
+
     public enum Answer {
         GET,
         MISS,
         REPEAT,
-        SUNK,
+        SUNK;
     }
 
     public AbstractField() {
@@ -45,5 +48,32 @@ public abstract class AbstractField {
             Cell cell = cells[column][row];
             cell.setSign(sign);
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int row = 0; row < fieldHeight; row++) {
+            for (int column = 0; column < fieldWidth; column++) {
+                Cell.Sign sign = readFromCell(new Point(column, row));
+                switch (sign) {
+                    case DESTROYED:
+                        stringBuilder.append('\uE73D');
+                        break;
+                    case MARKED:
+                        stringBuilder.append('\uE73A');
+                        break;
+                    case EMPTY:
+                        stringBuilder.append('\uE739');
+                        break;
+                    case DECK:
+                        stringBuilder.append('\uE73B');
+                        break;
+                }
+                stringBuilder.append(" ");
+            }
+            stringBuilder.append("\n");
+        }
+        return String.valueOf(stringBuilder);
     }
 }

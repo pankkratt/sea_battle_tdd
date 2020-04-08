@@ -40,7 +40,7 @@ public class Game {
         secondPlayer.setShootBehavior(new ImprovedRandomShootStrategy(firstPlayer));
         firstPlayer.arrangeShips();
         secondPlayer.arrangeShips();
-        numberOfDecks = firstPlayerField.countNumberOfDecks();
+        numberOfDecks = firstPlayerField.getNumberOfDecks();
         show();
     }
 

@@ -6,12 +6,14 @@ import java.util.Set;
 
 public class PlayersField extends AbstractField {
     private Set<Point> unavailableCells;
+    private int numberOfDecks;
 
     public PlayersField() {
         super();
         unavailableCells = new HashSet<>();
     }
 
+/*
     public int countNumberOfDecks() {
         int count = 0;
         for (int row = 0; row < fieldHeight; row++) {
@@ -23,6 +25,7 @@ public class PlayersField extends AbstractField {
         }
         return count;
     }
+*/
 
     public boolean addShip(Ship ship) {
         List<Point> points = ship.getPoints();
@@ -34,6 +37,7 @@ public class PlayersField extends AbstractField {
         for (Point point : points) {
             writeInCell(point, Cell.Sign.DECK);
         }
+        numberOfDecks += points.size();
         addUnavailableCells(points);
         return true;
     }
@@ -104,4 +108,7 @@ public class PlayersField extends AbstractField {
         return true;
     }
 
+    public int getNumberOfDecks() {
+        return numberOfDecks;
+    }
 }
