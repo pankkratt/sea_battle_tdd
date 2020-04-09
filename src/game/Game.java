@@ -6,6 +6,8 @@ import field.PlayersField;
 import field.Point;
 import player.*;
 
+import java.util.Scanner;
+
 public class Game {
     public static final int MAX_NUM_DECKS = 4;
     private Player firstPlayer;
@@ -36,8 +38,8 @@ public class Game {
     public void init() {
         firstPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
         secondPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
-        firstPlayer.setShootBehavior(new InputFromUserStrategy());
-        secondPlayer.setShootBehavior(new ImprovedRandomShootStrategy(firstPlayer));
+        firstPlayer.setShootBehavior(new ImprovedRandomShootStrategy(firstPlayer));
+        secondPlayer.setShootBehavior(new ImprovedRandomShootStrategy(secondPlayer));
         firstPlayer.arrangeShips();
         secondPlayer.arrangeShips();
         numberOfDecks = firstPlayerField.getNumberOfDecks();

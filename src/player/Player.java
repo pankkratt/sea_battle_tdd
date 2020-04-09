@@ -4,6 +4,8 @@ import field.EnemiesField;
 import field.PlayersField;
 import field.Point;
 
+import java.util.Set;
+
 public class Player {
     protected PlayersField field;
     protected EnemiesField enemyField;
@@ -47,6 +49,10 @@ public class Player {
 
     public void setLastHit(Point lastHit) {
         this.lastHit = lastHit;
+    }
+
+    public Set<Point> getIgnoredCells() {
+        return enemyField.getIgnoredCells();
     }
 }
 
