@@ -6,9 +6,6 @@ public abstract class AbstractField {
     protected int fieldWidth;
     protected int fieldHeight;
     protected Cell[][] cells;
-
-
-
     public enum Answer {
         GET,
         MISS,

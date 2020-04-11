@@ -1,21 +1,19 @@
 package game;
 
 import field.AbstractField;
-import field.EnemiesField;
+import field.EnemyField;
 import field.PlayersField;
 import field.Point;
 import player.*;
-
-import java.util.Scanner;
 
 public class Game {
     public static final int MAX_NUM_DECKS = 4;
     private Player firstPlayer;
     private Player secondPlayer;
     private PlayersField firstPlayerField;
-    private EnemiesField firstPlayerEnemyField;
+    private EnemyField firstPlayerEnemyField;
     private PlayersField secondPlayerField;
-    private EnemiesField secondPlayerEnemyField;
+    private EnemyField secondPlayerEnemyField;
     private Status status;
     private Viewable viewable;
     private int numberOfDecks;
@@ -27,9 +25,9 @@ public class Game {
 
     public Game() {
         firstPlayerField = new PlayersField();
-        firstPlayerEnemyField = new EnemiesField();
+        firstPlayerEnemyField = new EnemyField();
         secondPlayerField = new PlayersField();
-        secondPlayerEnemyField = new EnemiesField();
+        secondPlayerEnemyField = new EnemyField();
         firstPlayer = new Player(firstPlayerField, firstPlayerEnemyField);
         secondPlayer = new Player(secondPlayerField, secondPlayerEnemyField);
         status = Status.PLAY;
@@ -38,8 +36,8 @@ public class Game {
     public void init() {
         firstPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
         secondPlayer.setArrangeShipsBehavior(new RandomArrangeShipsStrategy());
-        firstPlayer.setShootBehavior(new ImprovedRandomShootStrategy(firstPlayer));
-        secondPlayer.setShootBehavior(new ImprovedRandomShootStrategy(secondPlayer));
+        firstPlayer.setShootBehavior(new FinishHimShootStrategy(firstPlayerEnemyField));
+        secondPlayer.setShootBehavior(new RandomShootStrategy(secondPlayerEnemyField));
         firstPlayer.arrangeShips();
         secondPlayer.arrangeShips();
         numberOfDecks = firstPlayerField.getNumberOfDecks();
@@ -47,25 +45,31 @@ public class Game {
     }
 
     public void play() {
-        Point shoot;
+        Point shot;
         AbstractField.Answer answer;
         Player currentPlayer = firstPlayer;
         PlayersField currentShelledField = secondPlayerField;
-        EnemiesField currentPlayerEnemyField = firstPlayerEnemyField;
+        EnemyField currentPlayerEnemyField = firstPlayerEnemyField;
 
         while (status == Status.PLAY) {
-            shoot = currentPlayer.shoot();
-            answer = currentShelledField.update(shoot);
-            currentPlayerEnemyField.update(shoot, answer);
+            shot = currentPlayer.shoot();
+            answer = currentShelledField.update(shot);
+            currentPlayerEnemyField.update(shot, answer);
             show();
-            System.out.println(answer);
-            if (answer == PlayersField.Answer.GET || answer == PlayersField.Answer.SUNK) {
+            System.out.println(answer); // TODO: 4/10/2020  
+            // begin temp code
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // TODO: 4/10/2020
+            // end temp code
+            if (answer == AbstractField.Answer.GET || answer == AbstractField.Answer.SUNK) {
                 currentPlayer.addHitCount();
-                currentPlayer.setLastHit(shoot);
                 changeGameStatus();
             }
             if (answer == PlayersField.Answer.MISS) {
-                currentPlayer.setLastHit(null);
                 currentPlayer = currentPlayer == firstPlayer ? secondPlayer : firstPlayer;
                 currentShelledField = currentShelledField == secondPlayerField ? firstPlayerField : secondPlayerField;
                 currentPlayerEnemyField = currentPlayerEnemyField == firstPlayerEnemyField

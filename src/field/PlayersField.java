@@ -13,20 +13,6 @@ public class PlayersField extends AbstractField {
         unavailableCells = new HashSet<>();
     }
 
-/*
-    public int countNumberOfDecks() {
-        int count = 0;
-        for (int row = 0; row < fieldHeight; row++) {
-            for (int column = 0; column < fieldWidth; column++) {
-                if (readFromCell(new Point(column, row)) == Cell.Sign.DECK) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-*/
-
     public boolean addShip(Ship ship) {
         List<Point> points = ship.getPoints();
         for (Point point : points) {
@@ -43,6 +29,7 @@ public class PlayersField extends AbstractField {
     }
 
     public Answer update(Point point) {
+        System.out.println(point);
         Cell.Sign sign = readFromCell(point);
         Answer answer;
 

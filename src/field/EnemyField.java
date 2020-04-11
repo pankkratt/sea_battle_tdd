@@ -3,10 +3,11 @@ package field;
 import java.util.HashSet;
 import java.util.Set;
 
-public class EnemiesField extends AbstractField {
+public class EnemyField extends AbstractField {
     private Set<Point> ignoredCells;
+    private Point lastGetting;
 
-    public EnemiesField() {
+    public EnemyField() {
         super();
         ignoredCells = new HashSet<>();
     }
@@ -14,10 +15,14 @@ public class EnemiesField extends AbstractField {
     public void update(Point point, Answer answer) {
         switch (answer) {
             case SUNK:
+                writeInCell(point, Cell.Sign.DESTROYED);
                 onSunk(point);
+                lastGetting = null;
+                break;
             case GET:
                 onGet(point);
                 writeInCell(point, Cell.Sign.DESTROYED);
+                lastGetting = point;
                 break;
             case MISS:
                 ignoredCells.add(point);
@@ -35,9 +40,9 @@ public class EnemiesField extends AbstractField {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
                 neighboringCell = new Point(column + i, row + j);
-                if (!((i == 0) == (j == 0))) {
-                    ignoredCells.add(neighboringCell);
-                    if (readFromCell(neighboringCell) == Cell.Sign.DESTROYED) {
+                ignoredCells.add(neighboringCell);
+                if (readFromCell(neighboringCell) == Cell.Sign.DESTROYED) {
+                    if (i == 0 ^ j == 0) {
                         writeInCell(point, Cell.Sign.EMPTY);
                         onSunk(neighboringCell);
                         writeInCell(point, Cell.Sign.DESTROYED);
@@ -61,5 +66,9 @@ public class EnemiesField extends AbstractField {
 
     public Set<Point> getIgnoredCells() {
         return new HashSet<>(ignoredCells);
+    }
+
+    public Point getLastGetting() {
+        return lastGetting;
     }
 }

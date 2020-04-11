@@ -14,7 +14,7 @@ public class FieldTest {
     @Before
     public void setUp() throws Exception {
         playersField = new PlayersField();
-        enemiesField = new EnemiesField();
+        enemiesField = new EnemyField();
     }
 
     @After

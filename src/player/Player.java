@@ -1,20 +1,17 @@
 package player;
 
-import field.EnemiesField;
+import field.EnemyField;
 import field.PlayersField;
 import field.Point;
 
-import java.util.Set;
-
 public class Player {
     protected PlayersField field;
-    protected EnemiesField enemyField;
+    protected EnemyField enemyField;
     protected ArrangeShipsBehavior arrangeShipsBehavior;
     protected ShootBehavior shootBehavior;
     protected int hitCount;
-    protected Point lastHit;
 
-    public Player(PlayersField field, EnemiesField enemyField) {
+    public Player(PlayersField field, EnemyField enemyField) {
         this.field = field;
         this.enemyField = enemyField;
     }
@@ -41,18 +38,6 @@ public class Player {
 
     public void addHitCount() {
         hitCount++;
-    }
-
-    public Point getLastHit() {
-        return lastHit;
-    }
-
-    public void setLastHit(Point lastHit) {
-        this.lastHit = lastHit;
-    }
-
-    public Set<Point> getIgnoredCells() {
-        return enemyField.getIgnoredCells();
     }
 }
 

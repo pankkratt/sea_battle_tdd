@@ -1,13 +1,22 @@
 @startuml
 package game {
++abstract class Configuration {
+    -{static}int fieldWidth = 10
+    -{static}int fieldHeight = 10
+
+    +{static}int getFieldWidth() 
+    +{static}void setFieldWidth(int fieldWidth) 
+    +{static}int getFieldHeight() 
+    +{static}void setFieldHeight(int fieldHeight) 
+}
 +class Game {
     +{static}final int MAX_NUM_DECKS = 4
     -Player firstPlayer
     -Player secondPlayer
-    -Field firstPlayerField
-    -Field firstPlayerEnemyField
-    -Field secondPlayerField
-    -Field secondPlayerEnemyField
+    -PlayersField firstPlayerField
+    -EnemyField firstPlayerEnemyField
+    -PlayersField secondPlayerField
+    -EnemyField secondPlayerEnemyField
     -Status status
     -Viewable viewable
     -int numberOfDecks
@@ -22,18 +31,30 @@ package game {
 }
 +class ShowInConsoleStrategy implements Viewable {
     ~StringBuilder display = new StringBuilder()
-    +void show(Field field, Field enemyField) 
-    -void getRow(int row, Field field) 
+    +void show(AbstractField field, AbstractField enemyField) 
+    -void getRow(int row, AbstractField field) 
     -char getValueOfSign(Cell.Sign sign) 
 }
 ~class ShowInGuiStrategy implements Viewable {
-    +void show(Field field, Field enemyField) 
+    +void show(AbstractField field, AbstractField enemyField) 
 }
 ~interface Viewable {
-    ~void show(Field field, Field enemyField)
+    ~void show(AbstractField field, AbstractField enemyField)
 }
 }
 package field {
++abstract class AbstractField {
+    #int fieldWidth
+    #int fieldHeight
+    #Cell[][] cells
+    +enum Answer 
+
+    +AbstractField() 
+    #void init() 
+    +Cell.Sign readFromCell(Point point) 
+    +void writeInCell(Point point, Cell.Sign sign) 
+    +String toString() 
+}
 +class Cell {
     -Sign sign
     +enum Sign 
@@ -42,24 +63,27 @@ package field {
     +void setSign(Sign sign) 
     +Sign getSign() 
 }
-+class Field {
-    +{static}final int WIDTH = 10
-    +{static}final int HEIGHT = 10
-    -Cell[][] cells
-    +enum Answer 
++class EnemyField extends AbstractField {
+    -Set<Point> ignoredCells
+    -Point lastGetting
 
-    +Field() 
-    -void init() 
-    +int countNumberOfDecks() 
-    +boolean addShip(Ship ship) 
-    +Cell.Sign readFromCell(Point point) 
-    +void writeInCell(Point point, Cell.Sign sign) 
-    +Answer update(Point point) 
+    +EnemyField() 
     +void update(Point point, Answer answer) 
-    +boolean isSunk() 
-    +void markNeighboringCells(Point point, Cell.Sign sign) 
-    -boolean isEnoughPlace(List<Point> points) 
-    -void markUnavailableCells(List<Point> points) 
+    -void onSunk(Point point) 
+    -void onGet(Point point) 
+    +Set<Point> getIgnoredCells() 
+    +Point getLastGetting() 
+}
++class PlayersField extends AbstractField {
+    -Set<Point> unavailableCells
+    -int numberOfDecks
+
+    +PlayersField() 
+    +boolean addShip(Ship ship) 
+    +Answer update(Point point) 
+    -void addUnavailableCells(List<Point> points) 
+    -boolean isSunk(Point point) 
+    +int getNumberOfDecks() 
 }
 +class Point {
     -int column
@@ -67,6 +91,7 @@ package field {
 
     +Point() 
     +Point(int column, int row) 
+    +Point(String s) 
     +int getColumn() 
     +int getRow() 
     +String toString() 
@@ -89,44 +114,50 @@ package field {
 }
 package player {
 ~interface ArrangeShipsBehavior {
-    ~void arrangeShips(Field field)
+    ~void arrangeShips(PlayersField field)
 }
-+class Computer extends Player {
-    +Computer(Field field, Field enemyField) 
++class FinishHimShootStrategy extends ImprovedRandomShootStrategy {
+    +FinishHimShootStrategy(EnemyField enemyField) 
+    +Point shoot() 
+    -Point shoot(Point shot) 
 }
-+class Human extends Player {
-    +Human(Field field, Field enemyField) 
-}
-+class ImprovedRandomShootStrategy implements ShootBehavior {
-    -Set<Point> ignoredPoints
-    -Player player
++class ImprovedRandomShootStrategy extends RandomShootStrategy {
 
-    +ImprovedRandomShootStrategy(Player player) 
+    +ImprovedRandomShootStrategy(EnemyField enemyField) 
     +Point shoot() 
 }
-+abstract class Player {
-    #Field field
-    #Field enemyField
++class InputFromUserStrategy implements ShootBehavior {
+    -InputStream source
+    -Scanner sc
+
+    +InputFromUserStrategy() 
+    +InputFromUserStrategy(InputStream source) 
+    +Point shoot() 
+    +void setSource(InputStream source) 
+}
++class Player {
+    #PlayersField field
+    #EnemyField enemyField
     #ArrangeShipsBehavior arrangeShipsBehavior
     #ShootBehavior shootBehavior
     #int hitCount
-    #Point lastHit
 
-    +Player(Field field, Field enemyField) 
+    +Player(PlayersField field, EnemyField enemyField) 
     +void arrangeShips() 
     +Point shoot() 
     +void setArrangeShipsBehavior(ArrangeShipsBehavior arrangeShipsBehavior) 
     +void setShootBehavior(ShootBehavior shootBehavior) 
     +int getHitCount() 
     +void addHitCount() 
-    +Point getLastHit() 
-    +void setLastHit(Point lastHit) 
 }
 +class RandomArrangeShipsStrategy implements ArrangeShipsBehavior {
 
-    +void arrangeShips(Field field) 
+    +void arrangeShips(PlayersField field) 
 }
 +class RandomShootStrategy implements ShootBehavior {
+    #EnemyField enemyField
+
+    +RandomShootStrategy(EnemyField enemyField) 
     +Point shoot() 
 }
 ~interface ShootBehavior {
@@ -134,12 +165,14 @@ package player {
 }
 }
 Game o-- Player
-Game o-- Field
+Game o-- EnemyField
 Game o-- Viewable
-ImprovedRandomShootStrategy o-- Player
-ImprovedRandomShootStrategy o-- Point
+Game o-- PlayersField
+EnemyField o-- Point
+PlayersField o-- Point
 Player o-- ArrangeShipsBehavior
 Player o-- ShootBehavior
-Player o-- Point
-Player o-- Field
+Player o-- EnemyField
+Player o-- PlayersField
+RandomShootStrategy o-- EnemyField
 @enduml

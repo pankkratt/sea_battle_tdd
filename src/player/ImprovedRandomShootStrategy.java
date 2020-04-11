@@ -1,20 +1,20 @@
 package player;
 
+import field.EnemyField;
 import field.Point;
 
-public class ImprovedRandomShootStrategy implements ShootBehavior {
-    private Player player;
+public class ImprovedRandomShootStrategy extends RandomShootStrategy {
 
-    public ImprovedRandomShootStrategy(Player player) {
-        this.player = player;
+    public ImprovedRandomShootStrategy(EnemyField enemyField) {
+        super(enemyField);
     }
 
     @Override
     public Point shoot() {
         Point point;
         do {
-            point = new Point();
-        } while (player.getIgnoredCells().contains(point));
+            point = super.shoot();
+        } while (enemyField.getIgnoredCells().contains(point));
         return point;
     }
 }

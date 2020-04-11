@@ -8,12 +8,12 @@ import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
-public class EnemiesFieldTest {
-    EnemiesField field;
+public class EnemyFieldTest {
+    EnemyField field;
 
     @Before
     public void setUp() throws Exception {
-        field = new EnemiesField();
+        field = new EnemyField();
     }
 
     @After
